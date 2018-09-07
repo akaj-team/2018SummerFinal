@@ -16,6 +16,7 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
+
     <application
         android:allowBackup="true"
         android:fullBackupContent="@xml/backup_descriptor"
@@ -24,7 +25,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/map_api_key" />
@@ -40,5 +40,14 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".ui.LoginActivity" />
         <activity android:name=".ui.SignUpActivity" />
+
+        <service
+            android:name=".service.MusicService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".service.MyIntentService"
+            android:exported="false"></service>
     </application>
+
 </manifest>
