@@ -31,8 +31,8 @@ internal class DrawerLayoutAdapter(private val menuItemList: List<MenuItem>, pri
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (position == 0) {
-            (holder as HeaderItemHolder).imgAvatar.setImageBitmap(user[0].avatar)
-            holder.tvName.text = user[0].name
+//            (holder as HeaderItemHolder).imgAvatar.setImageBitmap(user[0].avatar)
+            (holder as HeaderItemHolder).tvName.text = user[0].name
         } else {
             (holder as MenuItemHolder).imgItem.setImageResource(menuItemList[position - 1].image)
             holder.tvMenuTitle.text = menuItemList[position - 1].title
