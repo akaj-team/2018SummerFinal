@@ -22,6 +22,15 @@ class MusicService : Service() {
         private const val CHANEL_ID = "CHANEL_ID"
     }
 
+
+    /*
+    * implement interface xử lí sự kiện đồng bộ activity vs remoteview ???(
+    * e implememnt cái này bên PlayerActivity do register broadcast;
+    *
+    *
+    *
+    * */
+
     private var musicPlayer: MusicPlayer = MusicPlayer(this, object : MusicPlayerEventListener {
         override fun onPlayerStart(title: String, duration: Int) {
             remoteView.setTextViewText(R.id.tvNameSongMiniBar, title)
@@ -113,6 +122,12 @@ class MusicService : Service() {
             @Command.Companion.Command val command: Int = Command.getCommand(intent)
             @Command.Companion.Command
             when (command) {
+                /*
+                * service nhận action của anh, viết sẵn hết rồi.
+                *
+                *
+                *
+                * */
                 Command.START_SERVICE -> startForeground(SERVICE_ID, builder.build())
                 Command.PLAY_OR_PAUSE -> musicPlayer.changeState()
                 Command.STOP_SERVICE -> {

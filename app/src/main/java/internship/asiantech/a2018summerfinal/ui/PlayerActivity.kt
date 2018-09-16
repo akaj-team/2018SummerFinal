@@ -25,11 +25,8 @@ import internship.asiantech.a2018summerfinal.service.utils.TimeTransferUtils
 import kotlinx.android.synthetic.main.fragment_player.*
 import kotlinx.android.synthetic.main.fragment_player.view.*
 
-class PlayerActivity : AppCompatActivity(), View.OnClickListener,
-        MusicPlayerEventListener,
+class PlayerActivity : AppCompatActivity(), View.OnClickListener, MusicPlayerEventListener,
         SongInteractListener {
-
-
     private lateinit var mMusicPlayer: MusicPlayer
     private lateinit var mReceiver: MusicReceiver
     private val mIsBounding: Boolean = false
@@ -44,7 +41,6 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener,
         mMusicPlayer.setMusicList(listSong)
         mReceiver = MusicReceiver(this)
         position = intent.getIntExtra(MusicAdapter.POSITION_ID, 0)
-
     }
 
     override fun onPlayerStart(title: String, duration: Int) {
@@ -71,6 +67,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener,
 
     override fun onResume() {
         super.onResume()
+        //
         mReceiver = MusicReceiver(
                 object : MusicPlayerEventListener {
                     override fun onPlayerStart(title: String, duration: Int) {
@@ -154,6 +151,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener,
         when (v?.id) {
             R.id.imgNextSong -> {
                 mMusicPlayer.let {
+                    //t
                     var title = listSong[position].songTitle
                     var duration = listSong[position].duration
                     updateInfor(title, duration)
@@ -163,6 +161,7 @@ class PlayerActivity : AppCompatActivity(), View.OnClickListener,
             }
             R.id.imgPreviousSong -> {
                 mMusicPlayer.let {
+                 //test
                     var title = listSong[position].songTitle
                     var duration = listSong[position].duration
                     updateInfor(title, duration)
