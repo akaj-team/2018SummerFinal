@@ -24,13 +24,13 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.storage.FirebaseStorage
 import internship.asiantech.a2018summerfinal.model.User
-import kotlinx.android.synthetic.main.activity_login.*
-import kotlinx.android.synthetic.main.activity_profile_user.*
+import kotlinx.android.synthetic.main.activity_sign_up.*
 import java.io.ByteArrayOutputStream
 import java.io.IOException
 import java.util.*
 import java.util.regex.Pattern
 
+@Suppress("DEPRECATED_IDENTITY_EQUALS")
 class SignUpActivity : AppCompatActivity(), OnMapReadyCallback, GoogleMap.OnMapClickListener {
     private lateinit var map: GoogleMap
     private var avatar: String = ""

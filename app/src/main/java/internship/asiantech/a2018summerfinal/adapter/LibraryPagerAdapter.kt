@@ -11,7 +11,7 @@ import internship.asiantech.a2018summerfinal.fragment.ListSongsFragment
 
 class LibraryPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) {
     private companion object {
-        val TAB_TITLES = arrayOf("BÀI HÁT", "ALBUM", "FAVOURITE", "HISTORY")
+        val TAB_TITLES = arrayOf("BÀI HÁT", "PLAYLIST", "FAVOURITE", "HISTORY")
     }
 
     private val mListFragment: MutableList<Fragment> = mutableListOf()
@@ -21,10 +21,10 @@ class LibraryPagerAdapter(fm: FragmentManager?) : FragmentStatePagerAdapter(fm) 
     }
 
     private fun addFragment() {
-        mListFragment.add(ListSongsFragment())
+        mListFragment.add(ListSongsFragment.instance(0))
         mListFragment.add(PlaylistFragment())
-        mListFragment.add(FavouriteFragment())
-        mListFragment.add(HistoryFragment())
+        mListFragment.add(ListSongsFragment.instance(1))
+        mListFragment.add(ListSongsFragment.instance(2))
     }
 
     override fun getItem(position: Int): Fragment {

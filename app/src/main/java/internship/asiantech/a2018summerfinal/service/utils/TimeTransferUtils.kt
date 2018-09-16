@@ -9,6 +9,6 @@ class TimeTransferUtils {
             if (second < 10) {
                 sec = "0$sec"
             }
-            return minutes.toString() + ":" + sec
+            return "$minutes:$sec"
         }
 }

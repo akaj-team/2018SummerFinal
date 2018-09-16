@@ -22,7 +22,7 @@ class MusicService : Service() {
         private const val CHANEL_ID = "CHANEL_ID"
     }
 
-    private var musicPlayer: MusicPlayer = MusicPlayer(applicationContext, object : MusicPlayerEventListener {
+    private var musicPlayer: MusicPlayer = MusicPlayer(this, object : MusicPlayerEventListener {
         override fun onPlayerStart(title: String, duration: Int) {
             remoteView.setTextViewText(R.id.tvNameSongMiniBar, title)
             updatePlay()
@@ -65,15 +65,12 @@ class MusicService : Service() {
         }
     })
 
-    private val remoteView: RemoteViews = RemoteViews(packageName, R.layout.remoteview_playingmusic)
+    private lateinit var remoteView: RemoteViews
 
-    private val builder: NotificationCompat.Builder = NotificationCompat.Builder(applicationContext, CHANEL_ID)
-            .setCustomBigContentView(remoteView)
-            .setSmallIcon(R.drawable.ic_play)
-            .setOngoing(true)
+    private lateinit var builder: NotificationCompat.Builder
 
     init {
-        val playPendingIntent: PendingIntent = PendingIntent.getService(this, 0,
+        /*val playPendingIntent: PendingIntent = PendingIntent.getService(this, 0,
                 Command(applicationContext, Command.PLAY_OR_PAUSE).build(), 0)
         val deletePendingIntent: PendingIntent = PendingIntent.getService(this, 0,
                 Command(applicationContext, Command.STOP_SERVICE).build(), 0)
@@ -86,13 +83,33 @@ class MusicService : Service() {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         }
         val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
-        builder.setContentIntent(pendingIntent)
+        builder.setContentIntent(pendingIntent)*/
     }
 
     private val binder = MusicBinder(musicPlayer)
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         intent?.let {
+            remoteView = RemoteViews(packageName, R.layout.remoteview_playingmusic)
+            builder = NotificationCompat.Builder(applicationContext, CHANEL_ID)
+            .setCustomBigContentView(remoteView)
+                .setSmallIcon(R.drawable.ic_play)
+                .setOngoing(true)
+            val playPendingIntent: PendingIntent = PendingIntent.getService(this, 0,
+                    Command(applicationContext, Command.PLAY_OR_PAUSE).build(), 0)
+            val deletePendingIntent: PendingIntent = PendingIntent.getService(this, 0,
+                    Command(applicationContext, Command.STOP_SERVICE).build(), 0)
+            remoteView.apply {
+                setOnClickPendingIntent(R.id.btnPlayMiniBar, playPendingIntent)
+                setOnClickPendingIntent(R.id.btnExitMinibar, deletePendingIntent)
+            }
+
+            val notificationIntent: Intent = Intent(this, MainActivity::class.java)
+// .apply {
+//                flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+//            }
+            val pendingIntent: PendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0)
+            builder.setContentIntent(pendingIntent)
             @Command.Companion.Command val command: Int = Command.getCommand(intent)
             @Command.Companion.Command
             when (command) {

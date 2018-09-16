@@ -14,6 +14,7 @@ import internship.asiantech.a2018summerfinal.model.MenuItem
 import internship.asiantech.a2018summerfinal.model.User
 import kotlinx.android.synthetic.main.activity_list_music.*
 import com.google.gson.Gson
+import internship.asiantech.a2018summerfinal.fragment.ListSongsFragment
 import internship.asiantech.a2018summerfinal.ui.LoginActivity
 
 
@@ -30,7 +31,7 @@ class ListMusicActivity : AppCompatActivity() {
         setContentView(R.layout.activity_list_music)
         initViews()
         initViewPager()
-        initRecyclerView()
+//        initRecyclerView()
     }
 
     private fun initRecyclerView() {
@@ -41,7 +42,7 @@ class ListMusicActivity : AppCompatActivity() {
         val json = sharedPreferences.getString(LoginActivity.USER, "")
         val user = gson.fromJson<User>(json, User::class.java)
         users.add(user)
-        drawerLayoutAdapter= DrawerLayoutAdapter(menuItems, users, this)
+        drawerLayoutAdapter= DrawerLayoutAdapter(menuItems, users)
         recyclerViewMenu.adapter=drawerLayoutAdapter
     }
 
@@ -52,6 +53,7 @@ class ListMusicActivity : AppCompatActivity() {
 
     private fun initViewPager() {
         mViewPager.adapter = mLibraryPagerAdapter
+        mViewPager.currentItem
         mTabLayout.setupWithViewPager(mViewPager)
     }
 }

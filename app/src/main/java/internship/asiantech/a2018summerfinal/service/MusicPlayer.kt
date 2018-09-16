@@ -4,6 +4,7 @@ import android.content.ContentUris
 import android.content.Context
 import android.media.MediaPlayer
 import android.provider.MediaStore
+import android.util.Log
 import internship.asiantech.a2018summerfinal.model.Music
 import java.lang.ref.WeakReference
 import java.util.*
@@ -78,10 +79,11 @@ class MusicPlayer(private val context: Context, private val listener: MusicPlaye
                 val song = musics[currentPosition]
                 val id = song.songId
                 val trackUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id)
+                Log.e("aa", trackUri.toString())
                 mediaPlayer.setDataSource(context, trackUri)
                 mediaPlayer.prepare()
                 mediaPlayer.start()
-                listener.onPlayerStart(song.songTitle, mediaPlayer.duration)
+                //listener.onPlayerStart(song.songTitle, mediaPlayer.duration)
             }
         } else {
             mediaPlayer.start()
@@ -158,6 +160,12 @@ class MusicPlayer(private val context: Context, private val listener: MusicPlaye
         timeUpdater = TimeUpdater(this)
         timeUpdater?.start()
     }
+    fun endNotifyTime(){
+        timeUpdater.let {
+            timeUpdater?.stopUpdate()
+
+        }
+    }
 
     /**
      * @return playing song's time in millisecond
@@ -180,6 +188,7 @@ class MusicPlayer(private val context: Context, private val listener: MusicPlaye
         override fun run() {
             while (isRun) {
                 musicPlayerReference.get()?.let {
+
                     it.listener.onPlayerPlaying(it.getSeekPosition())
                 }
                 Thread.sleep(50)

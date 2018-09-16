@@ -40,12 +40,13 @@ class ListMusic(private val context: Context) {
                     val titleColumn = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.TITLE)
                     val idColumn = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media._ID)
                     val artistColumn = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.ARTIST)
-                    val duration = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.DURATION)
+                    val durationColumn = musicCursor.getColumnIndex(android.provider.MediaStore.Audio.Media.DURATION)
                     do {
                         val thisId = musicCursor.getLong(idColumn)
                         val thisTitle = musicCursor.getString(titleColumn)
                         val thisArtist = musicCursor.getString(artistColumn)
-                        listMusics?.add(Music(thisId, thisTitle, thisArtist, duration))
+                        val thisDuration = musicCursor.getInt(durationColumn)
+                        listMusics?.add(Music(thisId, thisTitle, thisArtist, thisDuration, false))
                     } while (musicCursor.moveToNext())
                 }
                 musicCursor.close()
