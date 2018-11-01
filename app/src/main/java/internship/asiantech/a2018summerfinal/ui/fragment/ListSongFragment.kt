@@ -3,71 +3,48 @@ package internship.asiantech.a2018summerfinal.ui.fragment
 import android.content.Context
 import android.os.Bundle
 import android.support.annotation.IntDef
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import internship.asiantech.a2018summerfinal.R
 import internship.asiantech.a2018summerfinal.database.AppDataHelper
 import internship.asiantech.a2018summerfinal.database.model.Song
 import internship.asiantech.a2018summerfinal.database.updater.SongUpdater
 import internship.asiantech.a2018summerfinal.ui.activity.MainActivity
-import internship.asiantech.a2018summerfinal.ui.fragment.listener.AdditionFragmentActionListener
 import internship.asiantech.a2018summerfinal.ui.fragment.listener.ListSongFragmentActionListener
 import internship.asiantech.a2018summerfinal.ui.recyclerview.adapter.SongAdapter
-import kotlinx.android.synthetic.main.fragment_list_song.*
+import kotlinx.android.synthetic.main.addition_recylerview.*
+import kotlinx.android.synthetic.main.fragment_addition.*
+import kotlinx.android.synthetic.main.addtion_list_song_header.*
 
-class ListSongFragment : Fragment() {
-    private lateinit var songAdapter: SongAdapter
-    private lateinit var backListener: AdditionFragmentActionListener
-    private lateinit var playListenerFragmentList: ListSongFragmentActionListener
+class ListSongFragment : AdditionFragment() {
+    private lateinit var listSongFragmentListener: ListSongFragmentActionListener
+    private lateinit var playlistName: String
     private val songs: MutableList<Song> = mutableListOf()
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.fragment_list_song, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        setListener()
-        initRecyclerView()
-
-        getFragmentName(arguments).let {
-            initSongs(it)
-            initView(it)
-        }
-    }
 
     override fun onAttach(context: Context?) {
         super.onAttach(context)
-        if (context is AdditionFragmentActionListener) {
-            backListener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement AdditionFragmentActionListener")
-        }
         if (context is ListSongFragmentActionListener) {
-            playListenerFragmentList = context
+            listSongFragmentListener = context
         } else {
-            throw RuntimeException(context.toString() + " must implement ListSongFragmentActionListener")
+            throw RuntimeException(context.toString() +
+                    " must implement ListSongFragmentActionListener")
         }
     }
 
-    private fun setListener() {
-        btnToolBarButtonBack.setOnClickListener {
-            backListener.onBackToStandard()
-        }
+    override fun initView() {
+        playlistName = getPlaylistName(arguments)
+        tvName.text = playlistName
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.adapter = SongAdapter(songs, context, listSongFragmentListener)
+        getSongs()
     }
 
-    private fun initRecyclerView() {
-        recyclerViewSong.layoutManager = LinearLayoutManager(context)
-        songAdapter = SongAdapter(songs, context, playListenerFragmentList)
-        recyclerViewSong.adapter = songAdapter
+    override fun addDiffViews(inflater: LayoutInflater) {
+        inflater.inflate(R.layout.addtion_list_song_header, flDiff)
+        inflater.inflate(R.layout.addition_recylerview, flAdditionContent)
     }
 
-    private fun getFragmentName(bundle: Bundle?): String {
+    private fun getPlaylistName(bundle: Bundle?): String {
         val type = bundle?.getInt(KEY_TYPE, 0)
         return when (type) {
             TYPE_HISTORY -> resources.getString(R.string.history)
@@ -76,37 +53,29 @@ class ListSongFragment : Fragment() {
         }
     }
 
-    private fun initSongs(playlistName: String) {
+    fun getSongs() {
         songs.clear()
         if (playlistName == resources.getString(R.string.all_song)) {
-            initAllSong()
+            getAllSong()
         } else {
-            initSongFromPlayList(playlistName)
+            getSongsFromPlayList(playlistName)
         }
     }
 
-    private fun initSongFromPlayList(playlistName: String) {
+    private fun getSongsFromPlayList(playlistName: String) {
         context?.let {
             AppDataHelper.getInstance(it).getSongInPlaylist(playlistName, object : SongUpdater {
                 override fun getSongResult(result: List<Song>) {
-                    Log.e("TAG",result.size.toString())
                     songs.addAll(result)
-                    songAdapter.notifyDataSetChanged()
+                    recyclerView.adapter.notifyDataSetChanged()
                 }
             })
         }
     }
 
-    private fun initAllSong() {
+    private fun getAllSong() {
         songs.addAll((activity as MainActivity).getSongs())
-    }
-
-    private fun initView(listSongName: String?) {
-        tvName.text = listSongName
-    }
-
-    fun changeListSongView() {
-        songAdapter.notifyDataSetChanged()
+        recyclerView.adapter.notifyDataSetChanged()
     }
 
     companion object {
@@ -127,6 +96,3 @@ class ListSongFragment : Fragment() {
     @Retention(AnnotationRetention.SOURCE)
     annotation class ListSongFragmentType
 }
-
-
-
